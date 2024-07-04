@@ -1,12 +1,13 @@
-import 'dart:ui';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:http/http.dart' as http;
+
 class InvestmentsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    //TODO: Update to show data from API on coin
     return Scaffold(
       appBar: AppBar(
         title: const Text(

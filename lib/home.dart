@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(right: 20),
               child: TextField(
                 decoration: InputDecoration(
-                    hintText: 'Investor, stocks',
+                    hintText: 'Investor, coins',
                     hintStyle: const TextStyle(color: Colors.black),
                     prefixIcon: const Icon(Icons.search),
                     prefixIconColor: Colors.black,
@@ -53,6 +53,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             //Cards on listview that scrolls horizontally
+            //TODO: Update to display coins
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -153,6 +154,7 @@ class HomeScreen extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => CardScreen()),
                       );
                     },
+                    //TODO: Update to display user's portfolio
                     child: const Text(
                       'View all',
                       style: TextStyle(fontSize: 14),
@@ -163,6 +165,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             // Container with investment info
+            //TODO: Update to display user's portfolio total
             const Padding(
               padding: EdgeInsets.only(right: 20),
               child: ListTile(
@@ -185,6 +188,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
+            //TODO: Update to show coins in user's portfolio
             GestureDetector(
               onTap: () {
                 Navigator.push(
