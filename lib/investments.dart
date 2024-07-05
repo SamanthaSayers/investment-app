@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class InvestmentsScreen extends StatelessWidget {
+  const InvestmentsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     //TODO: Update to show data from API on coin
