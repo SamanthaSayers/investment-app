@@ -27,21 +27,21 @@ class InvestmentsScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20),
             child: ListTile(
-              title: Text('\$ ${coinController.coins[1].currentPrice}',
+              title: Text('\$ ${coinController.coins[0].currentPrice}',
                   style: const TextStyle(
                       fontSize: 24,
                       color: Colors.black,
                       fontWeight: FontWeight.bold)),
               subtitle: Text(
-                  '${coinController.coins[1].marketCapChangePercentage24H}',
+                  '${coinController.coins[0].marketCapChangePercentage24H}%',
                   style: TextStyle(
                       color:
-                          coinController.coins[1].priceChangePercentage24H < 0
+                          coinController.coins[0].priceChangePercentage24H < 0
                               ? Colors.red
                               : Colors.green,
                       fontSize: 14,
                       fontWeight: FontWeight.bold)),
-              trailing: coinController.coins[1].priceChangePercentage24H > 0
+              trailing: coinController.coins[0].priceChangePercentage24H > 0
                   ? const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -67,7 +67,7 @@ class InvestmentsScreen extends StatelessWidget {
                   return SizedBox(
                     height: 320,
                     child: SparklineChart(
-                      data: coinController.coins[1].sparklineIn7D.price,
+                      data: coinController.coins[0].sparklineIn7D.price,
                     ),
                   );
                 },
