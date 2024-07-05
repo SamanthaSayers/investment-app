@@ -195,7 +195,6 @@ class HomeScreen extends StatelessWidget {
                                         Image.network(
                                             coinController.coins[index].image,
                                             height: 40),
-                                        const SizedBox(width: 20),
                                         Column(
                                           children: [
                                             Text(
@@ -204,7 +203,6 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(width: 60),
                                         SizedBox(
                                           width: 60,
                                           height: 20,
@@ -213,8 +211,9 @@ class HomeScreen extends StatelessWidget {
                                                 .sparklineIn7D.price,
                                           ),
                                         ),
-                                        const SizedBox(width: 50),
                                         Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
                                             Text(
                                                 "\$${coinController.coins[index].currentPrice.toStringAsFixed(2)}"),
