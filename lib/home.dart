@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mock_ronas_it/card.dart';
 import 'package:mock_ronas_it/controllers/coin_controller.dart';
+import 'package:mock_ronas_it/sparkline_chart.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -165,69 +166,78 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: Obx(
-                  () => coinController.isLoading.value
-                      ? const Center(child: CircularProgressIndicator())
-                      : coinController.errorMessage.value.isNotEmpty
-                          ? Center(
-                              child: Text(coinController.errorMessage.value))
-                          : ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: coinController.coins.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Image.network(
-                                          coinController.coins[index].image,
-                                          height: 40),
-                                      const SizedBox(width: 20),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            coinController.coins[index].symbol
-                                                .toUpperCase(),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(width: 60),
-                                      SizedBox(
-                                        width: 60,
-                                        height: 20,
-                                        child: SparklineChart(
-                                          data: coinController
-                                              .coins[index].sparklineIn7D.price,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 50),
-                                      Column(
-                                        children: [
-                                          Text(
-                                              "\$${coinController.coins[index].currentPrice.toStringAsFixed(2)}"),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "${coinController.coins[index].priceChangePercentage24H.toStringAsFixed(2)} %",
-                                            style: TextStyle(
-                                              color: coinController.coins[index]
-                                                          .priceChangePercentage24H <
-                                                      0
-                                                  ? Colors.red
-                                                  : Colors.green,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => CardScreen()),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: Obx(
+                    () => coinController.isLoading.value
+                        ? const Center(child: CircularProgressIndicator())
+                        : coinController.errorMessage.value.isNotEmpty
+                            ? Center(
+                                child: Text(coinController.errorMessage.value))
+                            : ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
+                                itemCount: coinController.coins.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Image.network(
+                                            coinController.coins[index].image,
+                                            height: 40),
+                                        const SizedBox(width: 20),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              coinController.coins[index].symbol
+                                                  .toUpperCase(),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(width: 60),
+                                        SizedBox(
+                                          width: 60,
+                                          height: 20,
+                                          child: SparklineChart(
+                                            data: coinController.coins[index]
+                                                .sparklineIn7D.price,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 50),
+                                        Column(
+                                          children: [
+                                            Text(
+                                                "\$${coinController.coins[index].currentPrice.toStringAsFixed(2)}"),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              "${coinController.coins[index].priceChangePercentage24H.toStringAsFixed(2)} %",
+                                              style: TextStyle(
+                                                color: coinController
+                                                            .coins[index]
+                                                            .priceChangePercentage24H <
+                                                        0
+                                                    ? Colors.red
+                                                    : Colors.green,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                  ),
                 ),
               ),
             ],
@@ -269,33 +279,4 @@ class HomeScreen extends StatelessWidget {
       ),
     ],
   );
-}
-
-class SparklineChart extends StatelessWidget {
-  final List<double> data;
-
-  const SparklineChart({super.key, required this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    return LineChart(
-      LineChartData(
-        lineBarsData: [
-          LineChartBarData(
-            spots: data.asMap().entries.map((e) {
-              return FlSpot(e.key.toDouble(), e.value);
-            }).toList(),
-            isCurved: true,
-            color: Colors.green,
-            barWidth: 2,
-            belowBarData: BarAreaData(show: false),
-            dotData: FlDotData(show: false),
-          ),
-        ],
-        titlesData: FlTitlesData(show: false),
-        borderData: FlBorderData(show: false),
-        gridData: FlGridData(show: false),
-      ),
-    );
-  }
 }
