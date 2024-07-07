@@ -1,9 +1,8 @@
 import 'dart:math';
 
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mock_ronas_it/card.dart';
+import 'package:mock_ronas_it/screens/card.dart';
 import 'package:mock_ronas_it/controllers/coin_controller.dart';
 import 'package:mock_ronas_it/sparkline_chart.dart';
 

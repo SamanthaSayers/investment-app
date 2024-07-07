@@ -5,7 +5,7 @@ import 'package:mock_ronas_it/controllers/coin_controller.dart';
 import 'package:mock_ronas_it/sparkline_chart.dart';
 
 class InvestmentsScreen extends StatelessWidget {
-  InvestmentsScreen({Key? key});
+  InvestmentsScreen({super.key});
 
   final CoinController coinController = Get.put(CoinController());
 

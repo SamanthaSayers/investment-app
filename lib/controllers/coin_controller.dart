@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:get/get.dart';
 import 'package:mock_ronas_it/models/coin_model.dart';
 import 'package:http/http.dart' as http;
@@ -7,7 +5,7 @@ import 'package:http/http.dart' as http;
 class CoinController extends GetxController {
   RxList<Coin> coins = <Coin>[].obs;
   RxBool isLoading = true.obs;
-  RxString errorMessage = ''.obs; // Add an error message observable
+  RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
