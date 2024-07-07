@@ -65,7 +65,7 @@ class InvestmentsScreen extends StatelessWidget {
                 itemCount: coinController.coins.length,
                 itemBuilder: (context, index) {
                   return SizedBox(
-                    height: 320,
+                    height: 300,
                     child: SparklineChart(
                       data: coinController.coins[0].sparklineIn7D.price,
                     ),
