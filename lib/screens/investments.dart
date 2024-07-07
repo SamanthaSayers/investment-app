@@ -33,7 +33,7 @@ class InvestmentsScreen extends StatelessWidget {
                       color: Colors.black,
                       fontWeight: FontWeight.bold)),
               subtitle: Text(
-                  '${coinController.coins[0].marketCapChangePercentage24H}%',
+                  '${coinController.coins[0].marketCapChangePercentage24H.toStringAsFixed(2)}%',
                   style: TextStyle(
                       color:
                           coinController.coins[0].priceChangePercentage24H < 0
