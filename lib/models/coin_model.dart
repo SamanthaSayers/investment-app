@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 List<Coin> coinFromJson(String str) =>
     List<Coin>.from(json.decode(str).map((x) => Coin.fromJson(x)));
 
@@ -33,6 +35,7 @@ class Coin {
   Roi? roi;
   DateTime lastUpdated;
   SparklineIn7D sparklineIn7D;
+  RxBool isFavourite;
 
   Coin({
     required this.id,
@@ -61,6 +64,7 @@ class Coin {
     required this.roi,
     required this.lastUpdated,
     required this.sparklineIn7D,
+    required this.isFavourite,
   });
 
   factory Coin.fromJson(Map<String, dynamic> json) => Coin(
@@ -92,6 +96,7 @@ class Coin {
         roi: json["roi"] == null ? null : Roi.fromJson(json["roi"]),
         lastUpdated: DateTime.parse(json["last_updated"]),
         sparklineIn7D: SparklineIn7D.fromJson(json["sparkline_in_7d"]),
+        isFavourite: false.obs,
       );
 
   Map<String, dynamic> toJson() => {

@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mock_ronas_it/models/coin_model.dart';
 import 'package:mock_ronas_it/screens/card.dart';
 import 'package:mock_ronas_it/controllers/coin_controller.dart';
+import 'package:mock_ronas_it/screens/watchlist.dart';
 import 'package:mock_ronas_it/sparkline_chart.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -38,17 +40,18 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 20),
                 child: TextField(
                   decoration: InputDecoration(
-                      hintText: 'Search',
-                      hintStyle: const TextStyle(color: Colors.grey),
-                      prefixIcon: const Icon(Icons.search),
-                      prefixIconColor: Colors.black,
-                      suffixIcon: const Icon(Icons.mic),
-                      suffixIconColor: Colors.black,
-                      fillColor: Colors.grey[200],
-                      filled: true,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none)),
+                    hintText: 'Search',
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    prefixIcon: const Icon(Icons.search),
+                    prefixIconColor: Colors.black,
+                    suffixIcon: const Icon(Icons.mic),
+                    suffixIconColor: Colors.black,
+                    fillColor: Colors.grey[200],
+                    filled: true,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none),
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
@@ -76,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                     children: coinController.coins.map((coin) {
                       final color =
                           Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                              .withOpacity(0.2);
+                              .withOpacity(0.1);
                       return Card(
                         color: color,
                         shape: RoundedRectangleBorder(
@@ -128,10 +131,11 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 180),
                     GestureDetector(
-                      onTap: () {
+                      onDoubleTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CardScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const CardScreen()),
                         );
                       },
                       child: const Text(
@@ -164,12 +168,38 @@ class HomeScreen extends StatelessWidget {
                       style: TextStyle(color: Colors.green)),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WatchlistScreen()),
+                        );
+                      },
+                      child: const Text(
+                        'Go to Watchlist',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
               GestureDetector(
-                onTap: () {
+                onDoubleTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CardScreen()),
+                    MaterialPageRoute(builder: (context) => const CardScreen()),
                   );
                 },
                 child: Padding(
@@ -185,53 +215,63 @@ class HomeScreen extends StatelessWidget {
                                 shrinkWrap: true,
                                 itemCount: coinController.coins.length,
                                 itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Image.network(
-                                            coinController.coins[index].image,
-                                            height: 40),
-                                        Column(
-                                          children: [
-                                            Text(
-                                              coinController.coins[index].symbol
-                                                  .toUpperCase(),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          width: 60,
-                                          height: 20,
-                                          child: SparklineChart(
-                                            data: coinController.coins[index]
-                                                .sparklineIn7D.price,
+                                  final coin = coinController.coins[index];
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(
+                                        icon: Obx(() => Icon(
+                                              coin.isFavourite.value
+                                                  ? Icons.star
+                                                  : Icons.star_border,
+                                              color: coin.isFavourite.value
+                                                  ? Colors.yellow
+                                                  : Colors.grey,
+                                            )),
+                                        onPressed: () {
+                                          coinController.toggleFavourite(coin);
+                                        },
+                                      ),
+                                      Image.network(
+                                          coinController.coins[index].image,
+                                          height: 40),
+                                      Column(
+                                        children: [
+                                          Text(
+                                            coinController.coins[index].symbol
+                                                .toUpperCase(),
                                           ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 60,
+                                        height: 20,
+                                        child: SparklineChart(
+                                          data: coinController
+                                              .coins[index].sparklineIn7D.price,
                                         ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                                "\$${coinController.coins[index].currentPrice.toStringAsFixed(2)}"),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              "${coinController.coins[index].priceChangePercentage24H.toStringAsFixed(2)} %",
-                                              style: TextStyle(
-                                                color: coinController
-                                                            .coins[index]
-                                                            .priceChangePercentage24H <
-                                                        0
-                                                    ? Colors.red
-                                                    : Colors.green,
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Text(
+                                              "\$${coinController.coins[index].currentPrice.toStringAsFixed(2)}"),
+                                          const SizedBox(height: 5),
+                                          Text(
+                                            "${coinController.coins[index].priceChangePercentage24H.toStringAsFixed(2)} %",
+                                            style: TextStyle(
+                                              color: coinController.coins[index]
+                                                          .priceChangePercentage24H <
+                                                      0
+                                                  ? Colors.red
+                                                  : Colors.green,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
                                   );
                                 },
                               ),
