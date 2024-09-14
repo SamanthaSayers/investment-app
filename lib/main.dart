@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mock_ronas_it/bloc/coin_bloc.dart';
+import 'package:mock_ronas_it/models/coin_event.dart';
+import 'package:mock_ronas_it/screens/coin_detail_screen.dart';
 import 'package:mock_ronas_it/screens/home.dart';
+import 'package:mock_ronas_it/screens/watchlist.dart';
 
-void main() async {
-  await GetStorage.init();
-  runApp(const MyApp());
+void main() {
+  runApp(BlocProvider(
+    create: (context) => CoinBloc()..add(FetchCoinsEvent()),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +20,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Investment App',
-      home: HomeScreen(),
+      theme: ThemeData(useMaterial3: true),
+      home: const HomeScreen(),
+      routes: {
+        '/coinDetail': (context) => const CoinDetailScreen(),
+        '/watchlist': (context) => const WatchlistScreen()
+      },
     );
   }
 }

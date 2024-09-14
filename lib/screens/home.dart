@@ -1,320 +1,167 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mock_ronas_it/models/coin_model.dart';
-import 'package:mock_ronas_it/screens/card.dart';
-import 'package:mock_ronas_it/controllers/coin_controller.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mock_ronas_it/bloc/coin_bloc.dart';
+import 'package:mock_ronas_it/models/coin_event.dart';
+import 'package:mock_ronas_it/models/coin_state.dart';
 import 'package:mock_ronas_it/screens/watchlist.dart';
-import 'package:mock_ronas_it/sparkline_chart.dart';
+
+import 'package:mock_ronas_it/screens/sparkline_chart.dart';
+import 'package:mock_ronas_it/utils.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
-  final CoinController coinController = Get.put(CoinController());
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center(
-          child: Text(
-            'Home',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-            ),
-          ),
+        title: Text(
+          'Investment App',
+          style: textStyle(20, Colors.black, FontWeight.bold),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 30),
-              Container(
-                padding: const EdgeInsets.only(right: 20),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    prefixIcon: const Icon(Icons.search),
-                    prefixIconColor: Colors.black,
-                    suffixIcon: const Icon(Icons.mic),
-                    suffixIconColor: Colors.black,
-                    fillColor: Colors.grey[200],
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              const Text(
-                'Featured Investments',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Obx(() {
-                  if (coinController.isLoading.value) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (coinController.errorMessage.value.isNotEmpty) {
-                    return Center(
-                        child: Text(coinController.errorMessage.value));
-                  }
-
-                  return Row(
-                    children: coinController.coins.map((coin) {
-                      final color =
-                          Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                              .withOpacity(0.1);
-                      return Card(
-                        color: color,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 20, 80, 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.network(coin.image, height: 50),
-                              const SizedBox(height: 30),
-                              Text(
-                                coin.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                coin.symbol.toUpperCase(),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  );
-                }),
-              ),
-              const SizedBox(height: 30),
-              Container(
-                padding: const EdgeInsets.only(right: 20),
-                child: Row(
-                  children: [
-                    const Text(
-                      'My portfolio',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 180),
-                    GestureDetector(
-                      onDoubleTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CardScreen()),
-                        );
-                      },
-                      child: const Text(
-                        'View all',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 30),
-              const Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: ListTile(
-                  contentPadding: EdgeInsets.all(20),
-                  tileColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(12),
-                    ),
-                  ),
-                  title: Text(
-                    '\$ 10 234,45',
-                    style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  subtitle: Text('+\$1 435, 34 ~ 7.89%',
-                      style: TextStyle(color: Colors.green)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(right: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WatchlistScreen()),
-                        );
-                      },
-                      child: const Text(
-                        'Go to Watchlist',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onDoubleTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const CardScreen()),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Obx(
-                    () => coinController.isLoading.value
-                        ? const Center(child: CircularProgressIndicator())
-                        : coinController.errorMessage.value.isNotEmpty
-                            ? Center(
-                                child: Text(coinController.errorMessage.value))
-                            : ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                itemCount: coinController.coins.length,
-                                itemBuilder: (context, index) {
-                                  final coin = coinController.coins[index];
-                                  return Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      IconButton(
-                                        icon: Obx(() => Icon(
-                                              coin.isFavourite.value
-                                                  ? Icons.star
-                                                  : Icons.star_border,
-                                              color: coin.isFavourite.value
-                                                  ? Colors.yellow
-                                                  : Colors.grey,
-                                            )),
-                                        onPressed: () {
-                                          coinController.toggleFavourite(coin);
-                                        },
-                                      ),
-                                      Image.network(
-                                          coinController.coins[index].image,
-                                          height: 40),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            coinController.coins[index].symbol
-                                                .toUpperCase(),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: 60,
-                                        height: 20,
-                                        child: SparklineChart(
-                                          data: coinController
-                                              .coins[index].sparklineIn7D.price,
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                              "\$${coinController.coins[index].currentPrice.toStringAsFixed(2)}"),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "${coinController.coins[index].priceChangePercentage24H.toStringAsFixed(2)} %",
-                                            style: TextStyle(
-                                              color: coinController.coins[index]
-                                                          .priceChangePercentage24H <
-                                                      0
-                                                  ? Colors.red
-                                                  : Colors.green,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              '/watchlist',
+            );
+          },
+          child: const Icon(Icons.star_border),
         ),
       ),
-      bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                width: 0.2,
-                color: Colors.grey,
+      // displays data emited by bloc
+      body: BlocBuilder<CoinBloc, CoinState>(
+        builder: (context, state) {
+          if (state is CoinLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is CoinLoadedState) {
+            if (state.coins.isEmpty) {
+              return const Center(
+                  child: Text(
+                      "No coins match your description. Please search again."));
+            }
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      onChanged: (value) {
+                        context.read<CoinBloc>().add(SearchCoinsEvent(value));
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Search by coin name',
+                        prefixIcon: Icon(Icons.search),
+                        border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(24))),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('',
+                          style:
+                              textStyle(12, Colors.black, FontWeight.normal)),
+                      Text('Coin',
+                          style:
+                              textStyle(12, Colors.black, FontWeight.normal)),
+                      Text('Price',
+                          style:
+                              textStyle(12, Colors.black, FontWeight.normal)),
+                      Text('Change (7d)',
+                          style:
+                              textStyle(12, Colors.black, FontWeight.normal)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.coins.length,
+                      itemBuilder: (context, index) {
+                        final coin = state.coins[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              '/coinDetail',
+                              arguments: coin,
+                            );
+                          },
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      coin.isFavourite.value
+                                          ? Icons.star
+                                          : Icons.star_border,
+                                    ),
+                                    onPressed: () {
+                                      context
+                                          .read<CoinBloc>()
+                                          .add(ToggleFavouriteCoinEvent(coin));
+                                    },
+                                  ),
+                                  Image.network(coin.image, height: 30),
+                                  const Spacer(),
+                                  Column(
+                                    children: [
+                                      Text(coin.name),
+                                      Text(coin.symbol.toUpperCase()),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Column(children: [
+                                    Text(
+                                      "\$${coin.currentPrice.toStringAsFixed(2)}",
+                                      style: textStyle(
+                                          14, Colors.black, FontWeight.bold),
+                                    ),
+                                    Text(
+                                      '${coin.priceChangePercentage24H.toStringAsFixed(2)}%',
+                                      style: textStyle(
+                                        12,
+                                        coin.priceChangePercentage24H < 0
+                                            ? Colors.red
+                                            : Colors.green,
+                                        FontWeight.normal,
+                                      ),
+                                    ),
+                                  ]),
+                                  const Spacer(),
+                                  SizedBox(
+                                    width: 90,
+                                    height: 50,
+                                    child: SparklineChart(
+                                        data: coin.sparklineIn7D.price),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-          child: navigationBar),
+            );
+          } else if (state is CoinErrorState) {
+            return Center(child: Text(state.error));
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
     );
   }
-
-  final NavigationBar navigationBar = NavigationBar(
-    backgroundColor: Colors.white,
-    elevation: 0,
-    destinations: const [
-      NavigationDestination(
-        icon: Icon(Icons.home),
-        label: '',
-      ),
-      NavigationDestination(
-        icon: Icon(Icons.search),
-        label: '',
-      ),
-      NavigationDestination(
-        icon: Icon(Icons.chat_rounded),
-        label: '',
-      ),
-      NavigationDestination(
-        icon: Icon(Icons.person),
-        label: '',
-      ),
-    ],
-  );
 }

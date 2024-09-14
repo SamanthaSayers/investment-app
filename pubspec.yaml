@@ -39,8 +39,13 @@ dependencies:
   fl_chart: ^0.55.0
   http: ^1.1.0
   get: ^4.6.6
+  intl: ^0.17.0
   google_fonts: 6.1.0
   get_storage: 2.0.3
+  bloc: ^8.1.4
+  flutter_bloc: ^8.1.6
+  money_formatter: ^0.0.3
+  extended_image: ^8.1.1
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +74,7 @@ flutter:
     - assets/card-image.png
     - assets/upward-green-graph.png
     - assets/downward-red-graph.png
+    - assets/investment-icon.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
